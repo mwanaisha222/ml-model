@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Prediction</title>
+</head>
+<body>
+    <h1>Model Prediction</h1>
+    <form id="predictionForm">
+        <label for="features">Enter Features (comma-separated):</label>
+        <input type="text" id="features" name="features" required>
+        <button type="submit">Predict</button>
+    </form>
+    <h2>Prediction: <span id="result"></span></h2>
+
+    <script>
+        document.getElementById('predictionForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const features = document.getElementById('features').value
+                .split(',')
+                .map(value => parseFloat(value.trim())); // Convert features to numbers
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ features })
+            });
+            const data = await response.json();
+            document.getElementById('result').innerText = data.prediction || data.error; // Display prediction or error
+        };
+    </script>
+
+    
+</body>
+</html>
